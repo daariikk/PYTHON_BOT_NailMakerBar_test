@@ -7,10 +7,10 @@ from telebot import types
 from loader import bot
 from handlers.custom_handlers import formatting_service
 from keyboards.reply.reply_markup import service_reply
-
+from database.core import insert_command
 @bot.message_handler(commands=["low"])
 def bot_low(message: Message):
-
+    insert_command(message.from_user.first_name, command='/low')
     bot.reply_to(message, "Выберите услугу:", reply_markup=service_reply())
     time.sleep(1)
     bot.register_next_step_handler(message, get_service_name)

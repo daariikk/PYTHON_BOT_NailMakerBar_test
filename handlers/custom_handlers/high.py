@@ -6,10 +6,10 @@ from telebot.types import Message
 from loader import bot
 from handlers.custom_handlers import formatting_service
 from keyboards.reply.reply_markup import service_reply
-
+from database.core import insert_command
 @bot.message_handler(commands=["high"])
-def bot_low(message: Message):
-
+def bot_high(message: Message):
+    insert_command(message.from_user.first_name, command='/high')
     bot.reply_to(message, "Выберите услугу:", reply_markup=service_reply())
 
     bot.register_next_step_handler(message, get_service_name)

@@ -5,10 +5,10 @@ from telebot.types import Message
 from keyboards.reply.reply_markup import service_reply
 from loader import bot
 from handlers.custom_handlers import formatting_service
-
+from database.core import insert_command
 @bot.message_handler(commands=["custom"])
 def bot_low(message: Message):
-
+    insert_command(message.from_user.first_name, command='/custom')
     bot.reply_to(message, "Выберите услугу:", reply_markup=service_reply())
 
     bot.register_next_step_handler(message, get_service_name)
@@ -34,12 +34,12 @@ def get_number(message: Message, format_list_dict: Dict):
 def get_range(message: Message, format_list_dict: Dict):
 
     # input_data = "111 - 1000"
-    if ('-' in message.text and message.text[:message.text.index('-')].isdigit()
-        and message.text[message.text.index('-')+1:].isdigit()
-        and int(message.text[:message.text.index('-')]) < int(message.text[message.text.index('-')+1:])):
-        low = int(message.text[:message.text.index('-')])
+    if ('-' in message.text and message.text[:message.text.index('-')].strip().isdigit()
+        and message.text[message.text.index('-')+1:].strip().isdigit()
+        and int(message.text[:message.text.index('-')].strip()) < int(message.text[message.text.index('-')+1:].strip())):
+        low = int(message.text[:message.text.index('-')].strip())
         print(low)
-        high = int(message.text[message.text.index('-')+1:])
+        high = int(message.text[message.text.index('-')+1:].strip())
         print(high)
         ANSWER_MESSAGE = ''
         services_name = list()

@@ -4,11 +4,13 @@ from loader import bot
 from keyboards.inline.inline_markup import start_inline
 from keyboards.reply.reply_markup import service_reply
 from site_API.utils import site_api_handler
+from database.core import insert_command
 
 service_dict = site_api_handler._make_response()
 
 @bot.message_handler(commands=["start"])
 def bot_start(message: Message):
+    insert_command(message.from_user.first_name, command='/start')
     WELCOME_MESSAGE = """
     Привет! 👋 Добро пожаловать в NailMakerBar — твое уютное место для заботы о себе и поддержания стильного образа! 🌸💅
 
@@ -37,6 +39,7 @@ def bot_start(message: Message):
 def callback_message(callback):
     user_id = callback.from_user.id
     if callback.data == 'questions':
+        insert_command(callback.from_user.first_name, command='Узнать прайс')
         bot.send_message(user_id, "Выберите услугу:", reply_markup=service_reply())
 
         bot.register_next_step_handler(callback.message, get_service_name)
